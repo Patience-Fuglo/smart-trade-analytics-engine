@@ -1,152 +1,134 @@
-# 📊 Smart Trade Analytics Engine
+# Smart Trade Analytics Engine
 
-A modular Python-based trade analytics engine designed to simulate core workflows in quantitative trading systems.  
-This project focuses on **data validation, trade processing, PnL computation, and portfolio-level insights**, with clean structure and test coverage.
+A modular Python trade analytics engine that simulates core quantitative trading workflows—data validation, trade processing, PnL computation, and summary metrics.
 
----
+## Features
 
-## 🚀 Overview
+- **Trade Processing Pipeline** – Symbol normalization, input validation, safe handling of invalid data
+- **PnL Analytics** – Profit/Loss calculation, return percentage, trade classification (PROFIT/LOSS/BREAKEVEN)
+- **Risk Flagging** – Rule-based detection for high-risk trades (>5% negative return)
+- **Summary Metrics** – Total PnL, win/loss counts, best and worst trade identification
+- **Test Coverage** – Unit tests with pytest
 
-In quantitative trading and research environments, reliable trade data processing is critical.  
-This project demonstrates how raw trade inputs can be:
-
-- cleaned and validated
-- transformed into structured records
-- analyzed for profitability and risk
-- aggregated into portfolio-level metrics
-
-The system is intentionally built in a **modular, extensible way**, mirroring patterns used in real trading infrastructure.
-
----
-
-## ⚙️ Features
-
-### ✅ Trade Processing Pipeline
-- Symbol normalization (case + formatting)
-- Input validation (price, quantity, missing values)
-- Safe handling of invalid trades (skipped without crashing)
-
-### 💰 Analytics Engine
-- Profit & Loss (PnL) calculation
-- Return percentage computation
-- Trade classification:
-  - `PROFIT`
-  - `LOSS`
-  - `BREAKEVEN`
-
-### ⚠️ Risk Flagging
-- Simple rule-based risk detection
-- Identifies trades with negative return thresholds
-
-### 📊 Portfolio Summary Metrics
-- Total PnL
-- Winning vs losing trades
-- Best and worst trade identification
-
-### 🧪 Testing
-- Unit tests using `pytest`
-- Covers core logic (PnL, classification, validation)
-
----
-
-## 🧠 Example Output
-
-```text
-Cleaned Trade Log:
-{'symbol': 'AAPL', 'pnl': 100.0, ...}
-{'symbol': 'GOOG', 'pnl': -100.0, ...}
-
-Total PnL: 40.0
-Winning Trades: 2
-Losing Trades: 1
-Best Trade: AAPL
-Worst Trade: GOOG
-```
-
----
-
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 smart-trade-analytics-engine/
 ├── src/
 │   ├── __init__.py
-│   └── main.py
+│   └── main.py          # Core analytics engine
 ├── tests/
-│   └── test_main.py
-├── README.md
+│   └── test_main.py     # Unit tests
 ├── requirements.txt
 ├── pytest.ini
-└── .gitignore
+└── README.md
 ```
 
----
-
-## 🛠️ Setup
+## Setup
 
 ```bash
+# Clone the repository
+git clone https://github.com/yourusername/smart-trade-analytics-engine.git
+cd smart-trade-analytics-engine
+
+# Create and activate virtual environment
 python3 -m venv .venv
-source .venv/bin/activate
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install dependencies
 pip install -r requirements.txt
 ```
 
----
+## Git Commands
 
-## ▶️ Run the Project
+```bash
+# Initialize repository (first time only)
+git init
+
+# Stage all changes
+git add .
+
+# Commit changes
+git commit -m "Your commit message"
+
+# Add remote origin (first time only)
+git remote add origin https://github.com/yourusername/smart-trade-analytics-engine.git
+
+# Push to GitHub
+git push -u origin main
+```
+
+## Usage
+
+### Run the Analytics Engine
 
 ```bash
 python src/main.py
 ```
 
----
+**Sample Output:**
+```
+Cleaned Trade Log:
+{'symbol': 'AAPL', 'buy_price': 150.0, 'sell_price': 160.0, 'quantity': 10, 'pnl': 100.0, 'return_pct': 6.67, 'result': 'PROFIT', 'risk': 'NORMAL'}
+{'symbol': 'GOOG', 'buy_price': 2800.0, 'sell_price': 2780.0, 'quantity': 5, 'pnl': -100.0, 'return_pct': -0.71, 'result': 'LOSS', 'risk': 'NORMAL'}
+{'symbol': 'TSLA', 'buy_price': 250.0, 'sell_price': 270.0, 'quantity': 2, 'pnl': 40.0, 'return_pct': 8.0, 'result': 'PROFIT', 'risk': 'NORMAL'}
 
-## 🧪 Run Tests
-
-```bash
-pytest
+Total PnL: 40.0
+Winning Trades: 2
+Losing Trades: 1
+Best Trade: AAPL | PnL: 100.0
+Worst Trade: GOOG | PnL: -100.0
 ```
 
----
+### Run Tests
 
-## 💼 Skills Demonstrated
+```bash
+# Run all tests
+pytest
 
-This project highlights key skills relevant to quantitative research and trading roles:
+# Run with verbose output
+pytest -v
 
-- Python for financial data processing
-- Input validation and error handling
-- Modular code design
-- Trade-level analytics (PnL, returns)
-- Basic risk classification
-- Unit testing with pytest
-- Git & GitHub project structuring
+# Run with coverage report (requires pytest-cov)
+pytest --cov=src --cov-report=term-missing
+```
 
----
+**Test Output:**
+```
+tests/test_main.py::test_clean_symbol PASSED
+tests/test_main.py::test_calculate_pnl PASSED
+tests/test_main.py::test_classify_trade PASSED
+tests/test_main.py::test_risk_check PASSED
+tests/test_main.py::test_process_single_trade_valid PASSED
+tests/test_main.py::test_calculate_total_pnl PASSED
 
-## 🔧 Future Enhancements
+============================== 6 passed ===============================
+```
 
-This project is designed to be extended into a more advanced quant system:
+## Technical Implementation
 
-- 📁 CSV / real market data ingestion
-- 📊 Portfolio class with position tracking
-- 📈 Sharpe ratio and performance metrics
-- 📉 Drawdown analysis
-- 📊 PnL and equity curve visualization
-- ⚡ Event-driven backtesting engine
+| Component | Description |
+|-----------|-------------|
+| `clean_symbol()` | Normalizes ticker symbols (uppercase, trimmed) |
+| `validate_prices()` | Ensures buy/sell prices are positive numbers |
+| `validate_quantity()` | Ensures quantity is a positive integer |
+| `calculate_pnl()` | Computes profit/loss: `(sell - buy) × quantity` |
+| `calculate_return_percentage()` | Computes return: `((sell - buy) / buy) × 100` |
+| `classify_trade()` | Classifies trades as PROFIT, LOSS, or BREAKEVEN |
+| `risk_check()` | Flags trades with returns below -5% as HIGH RISK |
+| `process_all_trades()` | Batch processes trades with error handling |
 
----
+## Future Enhancements
 
-## 📌 Why This Project Matters
+- CSV/API data ingestion
+- Position tracking and multi-asset support
+- Sharpe ratio and drawdown analysis
+- Equity curve visualization
+- Event-driven backtesting
 
-This project reflects foundational components of real trading systems, including:
+## License
 
-- Data integrity checks
-- Trade lifecycle processing
-- Performance measurement
-- Modular architecture
-
-It serves as a stepping stone toward building full-scale quantitative research and trading pipelines.
-
----
+MIT
 
 ## 👤 Author
 
